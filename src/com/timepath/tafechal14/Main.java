@@ -211,7 +211,7 @@ public class Main extends SimpleApplication {
 
     private Spatial warp(int o) {
         warpTex = new Material(assetManager, "MatDefs/Electricity/Electricity3.j3md");
-        final Texture tex = assetManager.loadTexture("textures/wall.png");
+        final Texture tex = assetManager.loadTexture("Textures/wall.png");
         tex.setWrap(WrapMode.Repeat);
         warpTex.setTexture("noise", tex);
         warpTex.setColor("color", new ColorRGBA(1f, 0f, 0f, .5f));

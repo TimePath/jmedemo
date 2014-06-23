@@ -67,7 +67,7 @@ public class World {
     public static Node generate(AssetManager assetManager, int width, int height, int depth, int units) {
         boolean[][][] hollow = hollow(width, height, depth, 2);
         Material mat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
-        Texture tex = assetManager.loadTexture("textures/wall.png");
+        Texture tex = assetManager.loadTexture("Textures/wall.png");
         tex.setWrap(WrapMode.Repeat);
         mat.setBoolean("VertexLighting", false);
         mat.setBoolean("HighQuality", true);
