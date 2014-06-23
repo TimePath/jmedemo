@@ -1,4 +1,4 @@
-apply plugin: 'java'
+apply plugin: 'groovy'
 
 repositories {
     mavenCentral()
@@ -10,6 +10,10 @@ ext.jmonkey = [
 ]
 
 dependencies {
+    compile "org.codehaus.groovy:groovy-all:2.3.3:indy"
+
+    // Test data
+    compile "com.jme3:jME3-testdata:${jmonkey.version}"
 
     // The core library
     compile "com.jme3:jME3-core:${jmonkey.version}"
@@ -30,4 +34,11 @@ dependencies {
     compile "com.jme3:jME3-networking:${jmonkey.version}"
     compile "com.jme3:jME3-plugins:${jmonkey.version}"
     compile "com.jme3:jME3-terrain:${jmonkey.version}"
+
+    // Third party libs
+    compile "com.jme3:jinput:${jmonkey.version}"
+    compile "com.jme3:eventbus:${jmonkey.version}"
+    compile "com.jme3:stack-alloc:${jmonkey.version}"
+    compile "com.jme3:vecmath:${jmonkey.version}"
+    compile "com.jme3:xmlpull-xpp3:${jmonkey.version}"
 }
