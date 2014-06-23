@@ -1,0 +1,33 @@
+apply plugin: 'java'
+
+repositories {
+    mavenCentral()
+    maven { url 'https://oss.sonatype.org/content/groups/public/' }
+}
+
+ext.jmonkey = [
+        version: '3.0.0.20140325-SNAPSHOT'
+]
+
+dependencies {
+
+    // The core library
+    compile "com.jme3:jME3-core:${jmonkey.version}"
+
+    // LWJGL stuff
+    compile "com.jme3:jME3-lwjgl:${jmonkey.version}"
+    compile "com.jme3:jME3-lwjgl-natives:${jmonkey.version}"
+    compile "com.jme3:lwjgl:${jmonkey.version}"
+
+    // Bullet stuff
+    compile "com.jme3:jME3-jbullet:${jmonkey.version}"
+    compile "com.jme3:jbullet:${jmonkey.version}"
+
+    // Feature libs
+    compile "com.jme3:jME3-blender:${jmonkey.version}"
+    compile "com.jme3:jME3-desktop:${jmonkey.version}"
+    compile "com.jme3:jME3-effects:${jmonkey.version}"
+    compile "com.jme3:jME3-networking:${jmonkey.version}"
+    compile "com.jme3:jME3-plugins:${jmonkey.version}"
+    compile "com.jme3:jME3-terrain:${jmonkey.version}"
+}
