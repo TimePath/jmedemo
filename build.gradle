@@ -31,11 +31,11 @@ dependencies {
 
     // Feature libs
     compile "${jmonkey.ns}-desktop:${jmonkey.ver}"
-    compile "${jmonkey.ns}-blender:${jmonkey.ver}"
-    compile "${jmonkey.ns}-effects:${jmonkey.ver}"
-    compile "${jmonkey.ns}-jogg:${jmonkey.ver}"
+//    compile "${jmonkey.ns}-blender:${jmonkey.ver}"
+//    compile "${jmonkey.ns}-effects:${jmonkey.ver}"
+//    compile "${jmonkey.ns}-jogg:${jmonkey.ver}"
     compile "${jmonkey.ns}-networking:${jmonkey.ver}"
-    compile "${jmonkey.ns}-niftygui:${jmonkey.ver}"
+//    compile "${jmonkey.ns}-niftygui:${jmonkey.ver}"
 //    compile "${jmonkey.ns}-plugins:${jmonkey.ver}"
 //    compile "${jmonkey.ns}-terrain:${jmonkey.ver}"
 
