@@ -1,5 +1,6 @@
 package com.timepath.tafechal14
 
+import com.jme3.app.FlyCamAppState
 import com.jme3.app.SimpleApplication
 import com.jme3.bullet.BulletAppState
 import com.jme3.bullet.PhysicsSpace
@@ -42,12 +43,16 @@ class Main extends SimpleApplication {
     Node levelNode
     BulletDebugAppState debug
     GameObjects objects
+    CustomCamera customCamera
 
     static void main(String[] args) {
         new Main().start()
     }
 
     void binds() {
+        stateManager.detach(stateManager.getState(FlyCamAppState))
+        customCamera = new CustomCamera(camera: cam, inputManager: inputManager, sixDof: true, fov: 60)
+
         String ACTION = "Something"
         inputManager.addMapping(ACTION, new MouseButtonTrigger(MouseInput.BUTTON_MIDDLE))
         inputManager.addListener(new ActionListener() {
@@ -119,8 +124,6 @@ class Main extends SimpleApplication {
 
             }
         })
-
-        flyCam.moveSpeed = 30
 
         add objects.pickup()
         add objects.warp(100)
