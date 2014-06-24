@@ -84,7 +84,7 @@ class GameObjects {
         warpTex.setVector2("texScale", new Vector2f(1, 1))
         warpTex.getAdditionalRenderState().setFaceCullMode(RenderState.FaceCullMode.Off)
         warpTex.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha)
-        Geometry warp = new Geometry("warp", new Box(o / 2f as float, o / 2f as float, o / 2f as float))
+        Geometry warp = new Geometry("warp", [o / 2 as float, o / 2 as float, o / 2 as float] as Box)
         warp.setLocalTranslation(50, 50, 50)
         warp.setMaterial(warpTex)
         warp.setQueueBucket(RenderQueue.Bucket.Transparent)
