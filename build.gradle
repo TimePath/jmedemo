@@ -4,42 +4,70 @@ repositories {
     mavenLocal()
     mavenCentral()
     maven { url 'https://oss.sonatype.org/content/groups/public/' }
+    maven { url "http://nifty-gui.sourceforge.net/nifty-maven-repo" }
 }
 
 ext.jmonkey = [
-        version: '3.0.0.20140325-SNAPSHOT'
+        ver: '3.1.0-snapshot-github',
+        ns: 'com.jme3:jme3'
 ]
 
 dependencies {
     compile "org.codehaus.groovy:groovy-all:2.3.3:indy"
 
     // Test data
-    compile "com.jme3:jME3-testdata:${jmonkey.version}"
+    compile "${jmonkey.ns}-testdata:${jmonkey.ver}"
 
     // The core library
-    compile "com.jme3:jME3-core:${jmonkey.version}"
+    compile "${jmonkey.ns}-core:${jmonkey.ver}"
 
-    // LWJGL stuff
-    compile "com.jme3:jME3-lwjgl:${jmonkey.version}"
-    compile "com.jme3:jME3-lwjgl-natives:${jmonkey.version}"
-    compile "com.jme3:lwjgl:${jmonkey.version}"
+    // Renderer
+    compile "${jmonkey.ns}-lwjgl:${jmonkey.ver}"
+//    compile "${jmonkey.ns}-jogl:${jmonkey.ver}"
 
-    // Bullet stuff
-    compile "com.jme3:jME3-jbullet:${jmonkey.version}"
-    compile "com.jme3:jbullet:${jmonkey.version}"
+    // Physics
+    compile "${jmonkey.ns}-jbullet:${jmonkey.ver}"
+//    compile "${jmonkey.ns}-bullet:${jmonkey.ver}"
 
     // Feature libs
-    compile "com.jme3:jME3-blender:${jmonkey.version}"
-    compile "com.jme3:jME3-desktop:${jmonkey.version}"
-    compile "com.jme3:jME3-effects:${jmonkey.version}"
-    compile "com.jme3:jME3-networking:${jmonkey.version}"
-    compile "com.jme3:jME3-plugins:${jmonkey.version}"
-    compile "com.jme3:jME3-terrain:${jmonkey.version}"
+    compile "${jmonkey.ns}-desktop:${jmonkey.ver}"
+    compile "${jmonkey.ns}-blender:${jmonkey.ver}"
+    compile "${jmonkey.ns}-effects:${jmonkey.ver}"
+    compile "${jmonkey.ns}-jogg:${jmonkey.ver}"
+    compile "${jmonkey.ns}-networking:${jmonkey.ver}"
+    compile "${jmonkey.ns}-niftygui:${jmonkey.ver}"
+//    compile "${jmonkey.ns}-plugins:${jmonkey.ver}"
+//    compile "${jmonkey.ns}-terrain:${jmonkey.ver}"
 
-    // Third party libs
-    compile "com.jme3:jinput:${jmonkey.version}"
-    compile "com.jme3:eventbus:${jmonkey.version}"
-    compile "com.jme3:stack-alloc:${jmonkey.version}"
-    compile "com.jme3:vecmath:${jmonkey.version}"
-    compile "com.jme3:xmlpull-xpp3:${jmonkey.version}"
+    // Third party libraries
+    def tpver = '3.0.0.20140325-SNAPSHOT'
+    compile "com.jme3:jbullet:${tpver}"
+    compile "com.jme3:stack-alloc:${tpver}"
+}
+
+def platforms = ['windows', 'linux', 'osx']
+platforms.each { platform ->
+    task "natives-${platform}" {
+        def outputDir = sourceSets.main.runtimeClasspath
+        inputs.files(configurations.compile)
+        outputs.dir(outputDir)
+        doLast {
+            copy {
+                configurations.compile.resolvedConfiguration.resolvedArtifacts
+                        .findAll { it.classifier == "natives-$platform" }
+                        .each { from zipTree(it.file) }
+                into outputDir
+            }
+        }
+    }
+}
+task natives {
+    description = 'Copies native libraries to the build directory.'
+    dependsOn platforms.collect { "natives-${it}" }.findAll { tasks[it] }
+}
+
+task run(dependsOn: ['classes', 'natives'], type: JavaExec) {
+    description 'Run the game'
+    main 'com.timepath.tafechal14.Main'
+    classpath += sourceSets.main.runtimeClasspath
 }
