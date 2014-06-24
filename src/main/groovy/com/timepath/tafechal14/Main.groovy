@@ -192,14 +192,12 @@ class Main extends SimpleApplication {
             sector.move(reps[i], reps[i + 1], reps[i + 2])
             levelNode.attachChild sector
 
-            if (i == 0) {
-                sector.breadthFirstTraversal(new SceneGraphVisitorAdapter() {
-                    @Override
-                    void visit(Geometry geom) {
-                        bullet.physicsSpace.add(geom)
-                    }
-                })
-            }
+            sector.breadthFirstTraversal(new SceneGraphVisitorAdapter() {
+                @Override
+                void visit(Geometry geom) {
+                    bullet.physicsSpace.add(geom)
+                }
+            })
         }
         rootNode.attachChild(levelNode)
 
@@ -212,5 +210,10 @@ class Main extends SimpleApplication {
         super.simpleUpdate(tpf)
         physicsCharacter.jump()
         camLight?.setPosition(cam.location)
+
+        def pos = cam.location
+        pos.x = (pos.x + 100f) % 100f
+        pos.y = (pos.y + 100f) % 100f
+        pos.z = (pos.z + 100f) % 100f
     }
 }
