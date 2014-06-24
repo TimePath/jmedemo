@@ -1,4 +1,5 @@
 package com.timepath.tafechal14
+
 import com.jme3.app.SimpleApplication
 import com.jme3.bullet.BulletAppState
 import com.jme3.bullet.PhysicsSpace
@@ -26,6 +27,7 @@ import com.jme3.texture.Texture
 import groovy.transform.CompileStatic
 import groovy.transform.TypeChecked
 import groovy.util.logging.Log
+
 /**
  * @author TimePath
  */
@@ -47,7 +49,7 @@ class Main extends SimpleApplication {
 
     void binds() {
         String ACTION = "Something"
-        inputManager.addMapping(ACTION, new MouseButtonTrigger(MouseInput.BUTTON_LEFT))
+        inputManager.addMapping(ACTION, new MouseButtonTrigger(MouseInput.BUTTON_MIDDLE))
         inputManager.addListener(new ActionListener() {
             CollisionResults results = new CollisionResults()
 
@@ -55,7 +57,7 @@ class Main extends SimpleApplication {
             void onAction(String name, boolean isPressed, float tpf) {
                 if (!isPressed) return
 
-                levelNode.collideWith(new Ray(cam.getLocation(), cam.getDirection()), results)
+                levelNode.collideWith(new Ray(cam.location, cam.direction), results)
                 if (results.size() == 0) return
                 CollisionResult closest = results.closestCollision
                 LOG.info(closest.toString())
@@ -64,6 +66,15 @@ class Main extends SimpleApplication {
                 results.clear()
             }
         }, ACTION)
+        String THROW = "Throw"
+        inputManager.addMapping(THROW, new MouseButtonTrigger(MouseInput.BUTTON_LEFT))
+        inputManager.addListener(new ActionListener() {
+            @Override
+            void onAction(String name, boolean isPressed, float tpf) {
+                if (!isPressed) return
+                add objects.dropBox(cam.location, cam.direction.normalize().multLocal(50))
+            }
+        }, THROW)
         String DEBUG = "Debug"
         inputManager.addMapping(DEBUG, new MouseButtonTrigger(MouseInput.BUTTON_RIGHT))
         inputManager.addListener(new ActionListener() {
@@ -200,6 +211,6 @@ class Main extends SimpleApplication {
     void simpleUpdate(float tpf) {
         super.simpleUpdate(tpf)
         physicsCharacter.jump()
-        camLight?.setPosition(cam.getLocation())
+        camLight?.setPosition(cam.location)
     }
 }
