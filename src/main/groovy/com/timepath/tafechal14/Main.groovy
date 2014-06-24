@@ -105,6 +105,9 @@ class Main extends SimpleApplication {
         debug = new MyBulletDebugAppState(bullet.physicsSpace)
         objects = new GameObjects(assetManager)
 
+        renderer.mainFrameBufferSrgb = true
+        renderer.linearizeSrgbImages = true
+
         bullet.physicsSpace.addTickListener(new PhysicsTickListener() {
             @Override
             void prePhysicsTick(final PhysicsSpace space, final float tpf) {
@@ -205,7 +208,7 @@ class Main extends SimpleApplication {
         rootNode.attachChild(levelNode)
 
         rootNode.addLight new AmbientLight(color: ColorRGBA.White)
-        rootNode.addLight camLight = new PointLight(color: ColorRGBA.White.mult(2), radius: 100)
+        rootNode.addLight camLight = new PointLight(color: ColorRGBA.White.mult(1), radius: 100)
     }
 
     @Override
