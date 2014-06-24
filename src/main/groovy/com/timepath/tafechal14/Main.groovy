@@ -29,6 +29,8 @@ import groovy.transform.CompileStatic
 import groovy.transform.TypeChecked
 import groovy.util.logging.Log
 
+import static com.jme3.bullet.BulletAppState.ThreadingType.PARALLEL
+
 /**
  * @author TimePath
  */
@@ -101,7 +103,12 @@ class Main extends SimpleApplication {
     void simpleInitApp() {
         viewPort.backgroundColor = ColorRGBA.White
         bullet = new BulletAppState()
+        bullet.broadphaseType = PhysicsSpace.BroadphaseType.AXIS_SWEEP_3
+        bullet.worldMin = Vector3f.ZERO
+        bullet.worldMax = Vector3f.UNIT_XYZ.mult(100)
+        bullet.threadingType = PARALLEL
         stateManager.attach(bullet)
+        bullet.physicsSpace.gravity = Vector3f.ZERO
         debug = new MyBulletDebugAppState(bullet.physicsSpace)
         objects = new GameObjects(assetManager)
 
