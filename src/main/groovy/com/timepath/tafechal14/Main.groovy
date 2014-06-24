@@ -1,4 +1,5 @@
 package com.timepath.tafechal14
+
 import com.jme3.app.SimpleApplication
 import com.jme3.bullet.BulletAppState
 import com.jme3.bullet.control.BetterCharacterControl
@@ -18,10 +19,10 @@ import com.jme3.scene.Geometry
 import com.jme3.scene.Node
 import com.jme3.scene.SceneGraphVisitorAdapter
 import com.jme3.scene.Spatial
-import groovy.transform.CompileDynamic
 import groovy.transform.CompileStatic
 import groovy.transform.TypeChecked
 import groovy.util.logging.Log
+
 /**
  * @author TimePath
  */
@@ -77,7 +78,6 @@ class Main extends SimpleApplication {
         if (s.getControl(PhysicsControl) != null) bullet.physicsSpace.add(s)
     }
 
-    @CompileDynamic
     @Override
     void simpleInitApp() {
         bullet = new BulletAppState()
@@ -102,7 +102,7 @@ class Main extends SimpleApplication {
             attachChild(model)
             addControl physicsCharacter = new BetterCharacterControl(0.4f, 1.8f, 80f)
             physicsCharacter.with {
-                jumpForce = [0, 80, 0] as Vector3f
+                setJumpForce new Vector3f(0f, 80f, 0f)
             }
         }
         add characterNode
@@ -150,8 +150,7 @@ class Main extends SimpleApplication {
         levelNode = new Node("Level")
         for (int i = 0; i < reps.length; i += 3) {
             Spatial gho = wmain.clone()
-            Vector3f dir = new Vector3f(reps[i], reps[i + 1], reps[i + 2])
-            gho.setLocalTranslation(dir)
+            gho.setLocalTranslation([reps[i], reps[i + 1], reps[i + 2]] as Vector3f)
             levelNode.attachChild(gho)
             if (i == 0) {
                 gho.breadthFirstTraversal(new SceneGraphVisitorAdapter() {
