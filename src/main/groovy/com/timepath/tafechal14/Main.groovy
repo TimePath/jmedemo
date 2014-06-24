@@ -1,8 +1,11 @@
 package com.timepath.tafechal14
 import com.jme3.app.SimpleApplication
 import com.jme3.bullet.BulletAppState
+import com.jme3.bullet.PhysicsSpace
+import com.jme3.bullet.PhysicsTickListener
 import com.jme3.bullet.control.BetterCharacterControl
 import com.jme3.bullet.control.PhysicsControl
+import com.jme3.bullet.control.RigidBodyControl
 import com.jme3.bullet.debug.BulletDebugAppState
 import com.jme3.collision.CollisionResult
 import com.jme3.collision.CollisionResults
@@ -85,6 +88,26 @@ class Main extends SimpleApplication {
         stateManager.attach(bullet)
         debug = new MyBulletDebugAppState(bullet.physicsSpace)
         objects = new GameObjects(assetManager)
+
+        bullet.physicsSpace.addTickListener(new PhysicsTickListener() {
+            @Override
+            void prePhysicsTick(final PhysicsSpace space, final float tpf) {
+                for (prb in space.rigidBodyList) {
+                    if (!(prb instanceof RigidBodyControl)) continue
+                    if (prb.mass <= 0) continue
+                    def pos = prb.physicsLocation
+                    pos.x = (pos.x + 100f) % 100f
+                    pos.y = (pos.y + 100f) % 100f
+                    pos.z = (pos.z + 100f) % 100f
+                    prb.physicsLocation = pos
+                }
+            }
+
+            @Override
+            void physicsTick(final PhysicsSpace space, final float tpf) {
+
+            }
+        })
 
         flyCam.moveSpeed = 30
 
