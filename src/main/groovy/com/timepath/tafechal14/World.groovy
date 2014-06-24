@@ -24,23 +24,26 @@ import groovy.util.logging.Log
 @Log('LOG')
 class World {
 
-    static boolean[][][] generate(int width, int height, int depth, int straightness, Random r = new Random()) {
+    static boolean[][][] generate(int width, int height, int depth, int straightness, int paths = 2, Random r = new Random()) {
         boolean[][][] map = new boolean[depth][height][width]
         int n = (width * height * depth) / 3 as int
         int x = 0, y = 0, z = 0, straight = 0, direction = 0
-        for (int i = 0; i < n; i++) {
-            map[z][y][x] = true
-            if (--straight < 0) {
-                straight = straightness + (r.nextInt(2) * (straightness / 2)) as int
-                direction = (direction + (1 + r.nextInt(5))) % 6; // new direction, not behind
-            }
-            switch (direction) {
-                case 0: if (++x >= width) x %= width; break
-                case 1: if (++y >= height) y %= height; break
-                case 2: if (++z >= depth) z %= depth; break
-                case 3: if (--x < 0) x += width; break
-                case 4: if (--y < 0) y += height; break
-                case 5: if (--z < 0) z += depth; break
+        for (int i = 0; i < paths; i++) {
+            for (int j = 0; ; j++) {
+                if (map[z][y][x] && (i + 1) * j >= n) break // Don't stop randomly
+                map[z][y][x] = true
+                if (--straight < 0) {
+                    straight = straightness + (r.nextInt(2) * (straightness / 2)) as int
+                    direction = (direction + (1 + r.nextInt(5))) % 6; // New direction, not behind
+                }
+                switch (direction) {
+                    case 0: if (++x >= width) x %= width; break
+                    case 1: if (++y >= height) y %= height; break
+                    case 2: if (++z >= depth) z %= depth; break
+                    case 3: if (--x < 0) x += width; break
+                    case 4: if (--y < 0) y += height; break
+                    case 5: if (--z < 0) z += depth; break
+                }
             }
         }
         return map
