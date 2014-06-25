@@ -1,7 +1,6 @@
 package com.timepath.tafechal14
 
 import com.jme3.asset.AssetManager
-import com.jme3.bullet.control.RigidBodyControl
 import com.jme3.material.Material
 import com.jme3.material.RenderState
 import com.jme3.math.ColorRGBA
@@ -57,35 +56,38 @@ class GameObjects {
         return g
     }
 
-    Geometry dropBox(Vector3f pos, Vector3f vel) {
+    Geometry dropBox(Vector3f pos, Vector3f vel = null, ColorRGBA color = ColorRGBA.randomColor(), float s = 3f) {
         def mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md")
         mat.with {
-            setColor("Color", ColorRGBA.randomColor())
+            setColor("Color", color)
         }
-        def phy = new Geometry(localTranslation: pos, material: mat, mesh: [0.5f, 0.5f, 0.5f] as Box)
-        def rbc = new RigidBodyControl()
-        phy.with {
-            addControl(rbc)
-        }
-        rbc.with {
-            setLinearVelocity(vel)
+        def phy = new Geometry(localTranslation: pos, material: mat, mesh: [0.5f * s as float, 0.5f * s as float, 0.5f * s as float] as Box)
+        if (vel) {
+            def rbc = new AgentControl()
+            phy.with {
+                addControl(rbc)
+            }
+            rbc.with {
+                setLinearVelocity(vel)
+            }
         }
         return phy
     }
 
-    Spatial warp(int o) {
+    Spatial warp(float scale) {
         def warpTex = new Material(assetManager, "MatDefs/Electricity/Electricity3.j3md")
         Texture tex = assetManager.loadTexture("Textures/wall.png")
         tex.setWrap(Texture.WrapMode.Repeat)
         warpTex.setTexture("noise", tex)
         warpTex.setColor("color", new ColorRGBA(1f, 0f, 0f, 0.5f))
         warpTex.setFloat("speed", 0.01f)
-        warpTex.setFloat("width", -FastMath.ZERO_TOLERANCE * 10 as float)
+        warpTex.setFloat("width", FastMath.ZERO_TOLERANCE * 100 as float)
         warpTex.setVector2("texScale", new Vector2f(1, 1))
         warpTex.getAdditionalRenderState().setFaceCullMode(RenderState.FaceCullMode.Off)
         warpTex.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha)
-        Geometry warp = new Geometry("warp", [o / 2 as float, o / 2 as float, o / 2 as float] as Box)
-        warp.setLocalTranslation(50, 50, 50)
+        float half = scale / 2 as float
+        Geometry warp = new Geometry("warp", [scale / 2 as float, scale / 2 as float, scale / 2 as float] as Box)
+        warp.setLocalTranslation(half, half, half)
         warp.setMaterial(warpTex)
         warp.setQueueBucket(RenderQueue.Bucket.Transparent)
         return warp

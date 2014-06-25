@@ -2,11 +2,9 @@ package com.timepath.tafechal14
 
 import com.jme3.input.CameraInput
 import com.jme3.input.InputManager
-import com.jme3.input.KeyInput
 import com.jme3.input.MouseInput
 import com.jme3.input.controls.ActionListener
 import com.jme3.input.controls.AnalogListener
-import com.jme3.input.controls.KeyTrigger
 import com.jme3.input.controls.MouseAxisTrigger
 import com.jme3.math.FastMath
 import com.jme3.math.Matrix3f
@@ -106,10 +104,10 @@ class CustomCamera implements AnalogListener, ActionListener {
             addMapping(CameraInput.FLYCAM_DOWN, new MouseAxisTrigger(MouseInput.AXIS_Y, true))
 
             // Keyboard
-            addMapping(CameraInput.FLYCAM_STRAFELEFT, new KeyTrigger(KeyInput.KEY_A))
-            addMapping(CameraInput.FLYCAM_STRAFERIGHT, new KeyTrigger(KeyInput.KEY_D))
-            addMapping(CameraInput.FLYCAM_FORWARD, new KeyTrigger(KeyInput.KEY_W))
-            addMapping(CameraInput.FLYCAM_BACKWARD, new KeyTrigger(KeyInput.KEY_S))
+//            addMapping(CameraInput.FLYCAM_STRAFELEFT, new KeyTrigger(KeyInput.KEY_A))
+//            addMapping(CameraInput.FLYCAM_STRAFERIGHT, new KeyTrigger(KeyInput.KEY_D))
+//            addMapping(CameraInput.FLYCAM_FORWARD, new KeyTrigger(KeyInput.KEY_W))
+//            addMapping(CameraInput.FLYCAM_BACKWARD, new KeyTrigger(KeyInput.KEY_S))
 
             addListener(this, MAPPINGS)
             setCursorVisible(false)

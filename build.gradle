@@ -16,7 +16,7 @@ dependencies {
     compile "org.codehaus.groovy:groovy-all:2.3.3:indy"
 
     // Test data
-    compile "${jmonkey.ns}-testdata:${jmonkey.ver}"
+//    compile "${jmonkey.ns}-testdata:${jmonkey.ver}"
 
     // The core library
     compile "${jmonkey.ns}-core:${jmonkey.ver}"
@@ -32,7 +32,7 @@ dependencies {
     // Feature libs
     compile "${jmonkey.ns}-desktop:${jmonkey.ver}"
 //    compile "${jmonkey.ns}-blender:${jmonkey.ver}"
-//    compile "${jmonkey.ns}-effects:${jmonkey.ver}"
+    compile "${jmonkey.ns}-effects:${jmonkey.ver}"
 //    compile "${jmonkey.ns}-jogg:${jmonkey.ver}"
     compile "${jmonkey.ns}-networking:${jmonkey.ver}"
 //    compile "${jmonkey.ns}-niftygui:${jmonkey.ver}"

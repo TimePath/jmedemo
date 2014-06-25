@@ -1,16 +1,22 @@
 package com.timepath.tafechal14
 
+import com.jme3.app.SimpleApplication
 import com.jme3.bounding.BoundingBox
+import com.jme3.bullet.BulletAppState
 import com.jme3.bullet.collision.shapes.BoxCollisionShape
 import com.jme3.bullet.collision.shapes.CompoundCollisionShape
 import com.jme3.bullet.control.RigidBodyControl
+import com.jme3.light.AmbientLight
 import com.jme3.material.Material
+import com.jme3.math.ColorRGBA
 import com.jme3.math.Vector2f
 import com.jme3.math.Vector3f
 import com.jme3.scene.Geometry
 import com.jme3.scene.Mesh
 import com.jme3.scene.Node
+import com.jme3.scene.SceneGraphVisitorAdapter
 import com.jme3.scene.VertexBuffer.Type
+import com.jme3.texture.Texture
 import com.jme3.util.BufferUtils
 import groovy.transform.CompileStatic
 import groovy.transform.TypeChecked
@@ -24,7 +30,48 @@ import groovy.util.logging.Log
 @Log('LOG')
 class World {
 
-    static boolean[][][] generate(int width, int height, int depth, int straightness, int paths = 2, Random r = new Random()) {
+    static void main(String[] args) {
+        def a = new SimpleApplication() {
+
+            @Override
+            void simpleInitApp() {
+                getFlyByCamera().moveSpeed = 30
+                def assetManager = getAssetManager()
+                def rootNode = getRootNode()
+                def mat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md")
+                def tex = assetManager.loadTexture("Textures/wall.png")
+                tex.setWrap(Texture.WrapMode.Repeat)
+                mat.setBoolean("VertexLighting", false)
+                mat.setBoolean("HighQuality", true)
+                mat.setBoolean("LowQuality", false)
+                mat.setTexture("DiffuseMap", tex)
+
+                def i = 10
+                Node sector = World.node(mat, i, i, i)
+
+                def bullet
+                getStateManager().attach bullet = new BulletAppState()
+                bullet.debugEnabled = true
+
+                rootNode.attachChild sector
+
+                rootNode.addLight new AmbientLight(color: ColorRGBA.White.mult(2))
+
+                sector.breadthFirstTraversal(new SceneGraphVisitorAdapter() {
+                    @Override
+                    void visit(Geometry geom) {
+                        bullet.physicsSpace.add(geom)
+                    }
+                })
+
+            }
+        }
+        a.showSettings = false
+        a.start()
+
+    }
+
+    static boolean[][][] generate(int width, int height, int depth, int straightness, int paths = 3, Random r = new Random()) {
         boolean[][][] map = new boolean[depth][height][width]
         int n = (width * height * depth) / 3 as int
         int x = 0, y = 0, z = 0, straight = 0, direction = 0
@@ -49,10 +96,10 @@ class World {
         return map
     }
 
-    static Node node(Material mat,
+    static Node node(Material mat = null, float units = 20, long seed,
                      int width = 10, int height = 10, int depth = 10,
-                     int straightness = 2, float units = 10, int divisions = 1) {
-        boolean[][][] hollow = generate(width, height, depth, straightness)
+                     int straightness = 2, int divisions = 1) {
+        boolean[][][] hollow = generate(width, height, depth, straightness, 3, new Random(seed))
         def level = new Node("Chunks")
         for (int i = 0; i < divisions; i++) {
             for (int j = 0; j < divisions; j++) {
@@ -68,7 +115,7 @@ class World {
                             units as int,
                             shape)
                     if (mesh == null) continue
-                    mesh.scaleTextureCoordinates(new Vector2f(units / 4 as float, units / 4 as float))
+                    mesh.scaleTextureCoordinates(new Vector2f(units / 10 as float, units / 10 as float))
                     def geom = new Geometry("Chunk ${k}.${j}.${i}", mesh)
                     def rbc = new RigidBodyControl(shape, 0)
                     rbc.with {
@@ -98,19 +145,22 @@ class World {
                      CompoundCollisionShape shape) {
         def axes = [Vector3f.UNIT_X.mult(units), Vector3f.UNIT_Y.mult(units), Vector3f.UNIT_Z.mult(units)]
         def mesh = new Mesh()
-        def verts = BufferUtils.createVector3Buffer(6 * 4 * depth * height * width)
-        def indices = BufferUtils.createIntBuffer(6 * 6 * depth * height * width)
-        def normals = BufferUtils.createFloatBuffer(6 * 12 * depth * height * width)
-        def uv = BufferUtils.createFloatBuffer(6 * 8 * depth * height * width)
+        def verts = BufferUtils.createVector3Buffer(6 * 4 * (depth + 2) * (height + 2) * (width + 2))
+        def indices = BufferUtils.createIntBuffer(6 * 6 * (depth + 2) * (height + 2) * (width + 2))
+        def normals = BufferUtils.createFloatBuffer(6 * 12 * (depth + 2) * (height + 2) * (width + 2))
+        def uv = BufferUtils.createFloatBuffer(6 * 8 * (depth + 2) * (height + 2) * (width + 2))
         Vector3f pos = new Vector3f(), start = null, end = new Vector3f()
         int idx = 0
-        for (int i in depthOffset..<depthOffset + depth) {
-            for (int j in heightOffset..<heightOffset + height) {
-                for (int k in widthOffset..<widthOffset + width) {
+        for (int i1 in depthOffset - 1..<depthOffset + depth + 1) {
+            for (int j1 in heightOffset - 1..<heightOffset + height + 1) {
+                for (int k1 in widthOffset - 1..<widthOffset + width + 1) {
+                    def i = (i1 + depth) % depth
+                    def j = (j1 + depth) % height
+                    def k = (k1 + depth) % width
                     pos.set(
-                            (k - widthOffset) * units as float,
-                            (j - heightOffset) * units as float,
-                            (i - depthOffset) * units as float)
+                            (k1 - widthOffset) * units as float,
+                            (j1 - heightOffset) * units as float,
+                            (i1 - depthOffset) * units as float)
                     def current = hollow[i][j][k]
                     def back = hollow[(i + depth - 1) % depth][j][k]
                     def front = hollow[(i + 1) % depth][j][k]

@@ -13,7 +13,6 @@ import groovy.util.logging.Log
 @TypeChecked
 @Log('LOG')
 @Serializable
-class HelloMessage extends AbstractMessage {
-    String name;
-    int id
+class SeedMessage extends AbstractMessage {
+    long seed
 }
