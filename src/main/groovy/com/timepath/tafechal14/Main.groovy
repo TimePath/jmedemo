@@ -90,6 +90,9 @@ class Main extends SimpleApplication {
             enq { handle(source, m) }
         }
 
+        /** nop */
+        void handle(final Client source, final Message m) { }
+
         void handle(final Client source, final HelloMessage m) {
             println "${m} is connected"
         }

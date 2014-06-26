@@ -111,6 +111,9 @@ class Server extends SimpleApplication {
             handle(source, m)
         }
 
+        /** nop */
+        void handle(final Client source, final Message m) {}
+
         void handle(final Connection source, final HelloMessage m) {
             m.with { id = source.id }
             players[source.id] = new Player(name: m.name)
